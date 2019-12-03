@@ -3,6 +3,12 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 #############################
+#### Parameters
+#############################
+
+video_port = 0
+
+#############################
 #### Show Image
 #############################
 
@@ -28,7 +34,7 @@ def close_windows():
     
 def video(function):
     '''Displays video with modifiable frames.'''
-    video = cv2.VideoCapture(0)
+    video = cv2.VideoCapture(video_port)
     while cv2.waitKey(200) & 0xFF != 27:
         frame = video.read()[1]
         if frame is not None:
@@ -181,7 +187,7 @@ def hsv_select_live():
     '''Thresholds live video via HSV Trackbar values.'''
     window_name = 'HSV Select Live' 
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
-    video = cv2.VideoCapture(0)
+    video = cv2.VideoCapture(video_port)
     hsv_min = np.array([0,0,0])
     hsv_max = np.array([179,255,255])
     def update():
