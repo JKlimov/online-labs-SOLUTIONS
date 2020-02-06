@@ -96,7 +96,7 @@ def findGreatestContour(contours):
 def detectDrawings(img, color_range):
     img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(img_hsv, color_range[0], color_range[1])
-    _, contours, _ = cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     if contours is []:
         return img
     cnt = findGreatestContour(contours)
@@ -269,15 +269,20 @@ def draw_matches(img, frame, total_keypoints, matches, kp_img, kp_frame):
     total_matches = 0
     
     # Need to draw only good matches, so create a mask
-    matchesMask = [[0,0] for i in xrange(len(matches))]
+    matchesMask = [[0,0] for i in range(len(matches))]
 
     # store all the good matches as per Lowe's ratio test.
     good_matches = []
-    for i,(m,n) in enumerate(matches):
-        if m.distance < 0.7*n.distance:
-            matchesMask[i]=[1,0]
-            total_matches += 1
-            good_matches.append(m)
+    i = 0
+    m = []
+    for x in list(enumerate(matches)):
+        if len(x[1]) == 2:
+            if x[1][0].distance < 0.7*x[1][1].distance:
+                matchesMask[i]=[1,0]
+                total_matches += 1
+                good_matches.append(x[1][0])
+                m.append(x[1][0])
+        i += 1
      
     # Getting percentages and putting it on screen
     match_percent = round(total_matches/total_keypoints, 3)
